@@ -1,0 +1,12 @@
+{
+    "name": "vikzh/vanila-php-realworld-example-app",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "vikzh",
+            "email": "vikt.anmail@gmail.com"
+        }
+    ],
+    "require": {}
+}
