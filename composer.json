@@ -8,5 +8,10 @@
             "email": "vikt.anmail@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.1"
+    },
+    "autoload": {
+        "App\\": "src/"
+    }
 }
