@@ -10,7 +10,8 @@
     ],
     "require": {
         "php": ">=7.1",
-        "filp/whoops": "^2.5"
+        "filp/whoops": "^2.5",
+        "symfony/http-foundation": "^5.0"
     },
     "autoload": {
         "App\\": "src/"

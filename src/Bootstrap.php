@@ -18,4 +18,8 @@ if(ENV === 'local') {
 }
 $whoopsErrorHandler->register();
 
-echo 'Main Page';
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$response = new \Symfony\Component\HttpFoundation\Response();
+$response->setContent('Test text');
+$response->prepare($request);
+$response->send();
