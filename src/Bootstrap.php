@@ -10,6 +10,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 error_reporting(E_ALL);
 
@@ -35,15 +36,14 @@ $requestContext = new RequestContext();
 $requestContext->fromRequest(Request::createFromGlobals());
 
 $request = Request::createFromGlobals();
+$response = new Response();
 
 $matcher = new UrlMatcher($routes, $requestContext);
 $routeInfo = $matcher->matchRequest($request);
 
-$controller = new $routeInfo['_controller']();
+$controller = new $routeInfo['_controller']($response);
 $method = $routeInfo['_route'];
 $controller->$method();
 
-$response = new \Symfony\Component\HttpFoundation\Response();
-$response->setContent('Test text');
 $response->prepare($request);
 $response->send();
