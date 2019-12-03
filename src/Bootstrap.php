@@ -5,12 +5,15 @@ namespace App;
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\ArticleController;
+use DI\Container;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use DI\ContainerBuilder;
+use function DI\create;
 
 error_reporting(E_ALL);
 
@@ -35,15 +38,16 @@ $routes->add('show', $route2);
 $requestContext = new RequestContext();
 $requestContext->fromRequest(Request::createFromGlobals());
 
-$request = Request::createFromGlobals();
-$response = new Response();
+$diContainer = new Container();
+$diContainer->set(Request::class, Request::createFromGlobals());
+$diContainer->set(Response::class, new Response());
 
 $matcher = new UrlMatcher($routes, $requestContext);
-$routeInfo = $matcher->matchRequest($request);
+$routeInfo = $matcher->matchRequest($diContainer->get(Request::class));
 
-$controller = new $routeInfo['_controller']($response);
+$controller = $routeInfo['_controller'];
 $method = $routeInfo['_route'];
-$controller->$method();
 
-$response->prepare($request);
+$response = $diContainer->call([$controller, $method]);
 $response->send();
+
