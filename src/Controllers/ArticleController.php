@@ -26,9 +26,9 @@ class ArticleController
         return $this->response;
     }
 
-    public function show()
+    public function show($parameters)
     {
-        $this->response->setContent($this->renderer->render('articles.twg', ['text' => __METHOD__]));
+        $this->response->setContent($this->renderer->render('article.twg', ['text' => __METHOD__, 'slug' => $parameters['slug']]));
 
         return $this->response;
     }

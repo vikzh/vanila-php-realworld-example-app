@@ -51,9 +51,12 @@ $diContainer->set(Renderer::class, create(Renderer::class)->constructor(\DI\get(
 
 $matcher = new UrlMatcher($routes, $requestContext);
 $routeInfo = $matcher->matchRequest($diContainer->get(Request::class));
-
 $controller = $routeInfo['_controller'];
 $method = $routeInfo['_route'];
 
-$response = $diContainer->call([$controller, $method]);
+$response = $diContainer->call([$controller, $method], [
+    'controllerName' => $routeInfo['_controller'],
+    'method' => $routeInfo['_route'],
+    'parameters' => $routeInfo
+]);
 $response->send();
