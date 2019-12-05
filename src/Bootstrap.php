@@ -4,13 +4,9 @@ namespace App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Controllers\ArticleController;
 use App\Template\Renderer;
 use DI\Container;
 use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Twig\Loader\FilesystemLoader;
@@ -31,12 +27,6 @@ if(ENV === 'local') {
 }
 $whoopsErrorHandler->register();
 
-$route1 = new Route('/articles', ['_controller' => ArticleController::class]);
-$route2 = new Route('/articles/{slug}', ['_controller' => ArticleController::class]);
-$routes = new RouteCollection();
-$routes->add('index', $route1);
-$routes->add('show', $route2);
-
 $requestContext = new RequestContext();
 $requestContext->fromRequest(Request::createFromGlobals());
 
@@ -49,8 +39,7 @@ $diContainer->set(Environment::class, function (){
 });
 $diContainer->set(Renderer::class, create(Renderer::class)->constructor(\DI\get(Environment::class)));
 
-$matcher = new UrlMatcher($routes, $requestContext);
-$routeInfo = $matcher->matchRequest($diContainer->get(Request::class));
+$routeInfo = require_once(__DIR__ . '/Router.php');
 $controller = $routeInfo['_controller'];
 $method = $routeInfo['_route'];
 
