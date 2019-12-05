@@ -6,7 +6,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 error_reporting(E_ALL);
 
-require_once (__DIR__ . 'ExceptionHandler.php');
+require_once (__DIR__ . '/ExceptionHandler.php');
 
 $diContainer = require_once(__DIR__ . '/Dependencies.php');
 
