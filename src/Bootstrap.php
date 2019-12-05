@@ -27,9 +27,6 @@ if(ENV === 'local') {
 }
 $whoopsErrorHandler->register();
 
-$requestContext = new RequestContext();
-$requestContext->fromRequest(Request::createFromGlobals());
-
 $diContainer = new Container();
 $diContainer->set(Request::class, Request::createFromGlobals());
 $diContainer->set(Response::class, new Response());
