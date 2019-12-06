@@ -5,10 +5,10 @@ use Whoops\Run;
 const ENV = 'local';
 
 $whoopsErrorHandler = new Run();
-if(ENV === 'local') {
+if (ENV === 'local') {
     $whoopsErrorHandler->prependHandler(new \Whoops\Handler\PrettyPageHandler());
 } else {
-    $whoopsErrorHandler->prependHandler(function ($e){
+    $whoopsErrorHandler->prependHandler(function ($e) {
         echo 'Error Page and Developer notification';
     });
 }

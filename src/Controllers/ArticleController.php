@@ -19,7 +19,7 @@ class ArticleController
         $this->renderer = $renderer;
     }
 
-    public  function index()
+    public function index()
     {
         $this->response->setContent($this->renderer->render('articles.twg', ['text' => __METHOD__]));
 
