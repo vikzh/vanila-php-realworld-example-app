@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Template\Renderer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -10,25 +9,23 @@ class ArticleController
 {
     private $request;
     private $response;
-    private $renderer;
 
-    public function __construct(Request $request, Response $response, Renderer $renderer)
+    public function __construct(Request $request, Response $response)
     {
         $this->request = $request;
         $this->response = $response;
-        $this->renderer = $renderer;
     }
 
     public function index()
     {
-        $this->response->setContent($this->renderer->render('articles.twg', ['text' => __METHOD__]));
+        $this->response->setData(['text' => __METHOD__]);
 
         return $this->response;
     }
 
     public function show($parameters)
     {
-        $this->response->setContent($this->renderer->render('article.twg', ['text' => __METHOD__, 'slug' => $parameters['slug']]));
+        $this->response->setData(['text' => __METHOD__, 'slug' => $parameters['slug']]);
 
         return $this->response;
     }
