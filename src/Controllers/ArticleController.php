@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\Article;
 
 class ArticleController
 {
@@ -25,7 +26,8 @@ class ArticleController
 
     public function show($parameters)
     {
-        $this->response->setData(['text' => __METHOD__, 'slug' => $parameters['slug']]);
+        $article = Article::find(1);
+        $this->response->setData($article);
 
         return $this->response;
     }
