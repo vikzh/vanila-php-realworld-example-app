@@ -13,4 +13,4 @@ $fileLocator = new FileLocator([__DIR__]);
 $loader = new PhpFileLoader($fileLocator);
 $routes = $loader->load('Routes.php');
 $matcher = new UrlMatcher($routes, $requestContext);
-return $matcher->matchRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+return $matcher->matchRequest(Request::createFromGlobals());
