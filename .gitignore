@@ -1,3 +1,5 @@
 .idea
 /vendor
 mydb.db
+Conduit.postman_collection.json
+run-api-tests.sh
