@@ -11,6 +11,7 @@ $requestContext->fromRequest(Request::createFromGlobals());
 
 $fileLocator = new FileLocator([__DIR__]);
 $loader = new PhpFileLoader($fileLocator);
-$routes = $loader->load('Routes.php');
+$routes = $loader->load('ApiRoutes.php');
+$routes->addPrefix('/api');
 $matcher = new UrlMatcher($routes, $requestContext);
 return $matcher->matchRequest(Request::createFromGlobals());
