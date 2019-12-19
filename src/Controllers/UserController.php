@@ -29,4 +29,17 @@ class UserController
         $newUser->save();
         return $this->response->setData($newUser);
     }
+
+    public function login()
+    {
+        $user = User::where('email', $this->request->get('email'))->first();
+        if(password_verify($this->request->get('password'), $user->password))
+        {
+            $this->response->setData($user);
+        } else {
+            $this->response->setData('Password is incorrect');
+        }
+        
+        return $this->response;
+    }
 }

@@ -9,4 +9,5 @@ return function (RoutingConfigurator $routes) {
     $routes->add('show', 'articles/{slug}')->controller(ArticleController::class);
 
     $routes->add('store', 'users')->methods(['POST'])->controller(UserController::class);
+    $routes->add('login', 'login')->methods(['POST'])->controller(UserController::class);
 };
