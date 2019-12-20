@@ -9,7 +9,7 @@ Capsule::schema()->create('users', function ($table) {
     $table->string('username')->unique();
     $table->string('email')->unique();
     $table->string('password');
-    $table->string('bio');
+    $table->string('bio')->nullable();
     $table->string('image');
     $table->timestamps();
 });
