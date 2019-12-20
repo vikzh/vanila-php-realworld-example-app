@@ -33,7 +33,7 @@ class UserController
         $newUser->save();
         return $this->response->setData([
             'user' => $newUser,
-            'token' =>
+            'token' => $this->jwtHelper->generateToken($newUser)
         ]);
     }
 
@@ -43,7 +43,7 @@ class UserController
             $user = $this->jwtHelper->validateToken($this->request->get('jwt'))->data;
             $this->response->setData([
                 'user' => $user,
-                'token' => $this->jwtHelper->generateToken($user)
+                'jwt' => $this->jwtHelper->generateToken($user)
             ]);
             return $this->response;
         }
