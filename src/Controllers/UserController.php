@@ -23,14 +23,18 @@ class UserController
     public function store()
     {
         $newUser = new User();
-        $newUser->username = $this->request->get('username');
-        $newUser->email = $this->request->get('email');
-        $newUser->password = password_hash($this->request->get('password'), PASSWORD_DEFAULT);
-        $newUser->bio = $this->request->get('bio');
-        $newUser->image = $this->request->get('image');
+        $newUserData = json_decode($this->request->getContent(), true)['user'];
+        $newUser->username = $newUserData['username'];
+        $newUser->email = $newUserData['email'];
+        $newUser->password = password_hash($newUserData['password'], PASSWORD_DEFAULT);
+        $newUser->bio = $newUserData['bio'] ?? null;
+        $newUser->image = $newUserData['image'] ?? null;
 
         $newUser->save();
-        return $this->response->setData($newUser);
+        return $this->response->setData([
+            'user' => $newUser,
+            'token' =>
+        ]);
     }
 
     public function login()
@@ -38,7 +42,8 @@ class UserController
         if($this->request->get('jwt')){
             $user = $this->jwtHelper->validateToken($this->request->get('jwt'))->data;
             $this->response->setData([
-                'user' => $user
+                'user' => $user,
+                'token' => $this->jwtHelper->generateToken($user)
             ]);
             return $this->response;
         }

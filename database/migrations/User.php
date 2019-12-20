@@ -10,6 +10,6 @@ Capsule::schema()->create('users', function ($table) {
     $table->string('email')->unique();
     $table->string('password');
     $table->string('bio')->nullable();
-    $table->string('image');
+    $table->string('image')->nullable();
     $table->timestamps();
 });
