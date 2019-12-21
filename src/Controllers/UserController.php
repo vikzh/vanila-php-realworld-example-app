@@ -39,20 +39,21 @@ class UserController
 
     public function login()
     {
-        if($this->request->get('jwt')){
-            $user = $this->jwtHelper->validateToken($this->request->get('jwt'))->data;
+        $userCredentials = json_decode($this->request->getContent(), true)['user'];
+        /*if($userCredentials['token']){
+            $user = $this->jwtHelper->validateToken($userCredentials['token'])->data;
             $this->response->setData([
                 'user' => $user,
                 'jwt' => $this->jwtHelper->generateToken($user)
             ]);
             return $this->response;
-        }
+        }*/
 
-        $user = User::where('email', $this->request->get('email'))->first();
-        if(password_verify($this->request->get('password'), $user->password))
+        $user = User::where('email', $userCredentials['email'])->first();
+        if(password_verify($userCredentials['password'], $user->password))
         {
+            $user->token = $this->jwtHelper->generateToken($user);
             $this->response->setData([
-                'jwt' => $this->jwtHelper->generateToken($user),
                 'user' => $user
             ]);
         } else {
