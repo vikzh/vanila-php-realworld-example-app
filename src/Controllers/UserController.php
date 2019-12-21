@@ -29,11 +29,11 @@ class UserController
         $newUser->password = password_hash($newUserData['password'], PASSWORD_DEFAULT);
         $newUser->bio = $newUserData['bio'] ?? null;
         $newUser->image = $newUserData['image'] ?? null;
-
         $newUser->save();
+
+        $newUser->token = $this->jwtHelper->generateToken($newUser);
         return $this->response->setData([
             'user' => $newUser,
-            'token' => $this->jwtHelper->generateToken($newUser)
         ]);
     }
 
