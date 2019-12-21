@@ -11,4 +11,5 @@ return function (RoutingConfigurator $routes) {
     $routes->add('store', 'users')->methods(['POST'])->controller(UserController::class);
     $routes->add('login', 'users/login')->methods(['POST'])->controller(UserController::class);
     $routes->add('getCurrentUser', 'user')->methods(['GET'])->controller(UserController::class);
+    $routes->add('update', 'user')->methods(['PUT'])->controller(UserController::class);
 };

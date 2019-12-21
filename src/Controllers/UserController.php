@@ -23,7 +23,8 @@ class UserController
         if($this->request->headers->has('Authorization')){
             [$authorizationKey, $authorizationValue] = explode(' ', $this->request->headers->get('Authorization'));
             if($authorizationKey === 'Token'){
-                $this->user = $this->jwtHelper->validateToken($authorizationValue)->data;
+                $userData = $this->jwtHelper->validateToken($authorizationValue)->data;
+                $this->user = User::where('token', $userData->token)->first();
             }
         }
     }
@@ -65,6 +66,20 @@ class UserController
 
     public function getCurrentUser()
     {
+        $this->response->setData([
+            'user' => $this->user
+        ]);
+
+        return $this->response;
+    }
+
+    public function update()
+    {
+        $dataToUpdate = json_decode($this->request->getContent(), true);
+        $this->user->fill($dataToUpdate);
+        $this->user->token = $this->jwtHelper->generateToken($this->user);
+        $this->user->save();
+
         $this->response->setData([
             'user' => $this->user
         ]);
