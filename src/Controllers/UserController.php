@@ -12,12 +12,20 @@ class UserController
     private $request;
     private $response;
     private $jwtHelper;
+    private $user;
 
     public function __construct(Request $request, Response $response, JwtHelper $jwtHelper)
     {
         $this->request = $request;
         $this->response = $response;
         $this->jwtHelper = $jwtHelper;
+
+        if($this->request->headers->has('Authorization')){
+            [$authorizationKey, $authorizationValue] = explode(' ', $this->request->headers->get('Authorization'));
+            if($authorizationKey === 'Token'){
+                $this->user = $this->jwtHelper->validateToken($authorizationValue)->data;
+            }
+        }
     }
 
     public function store()
@@ -29,9 +37,9 @@ class UserController
         $newUser->password = password_hash($newUserData['password'], PASSWORD_DEFAULT);
         $newUser->bio = $newUserData['bio'] ?? null;
         $newUser->image = $newUserData['image'] ?? null;
+        $newUser->token = $this->jwtHelper->generateToken($newUser);
         $newUser->save();
 
-        $newUser->token = $this->jwtHelper->generateToken($newUser);
         return $this->response->setData([
             'user' => $newUser,
         ]);
@@ -40,14 +48,6 @@ class UserController
     public function login()
     {
         $userCredentials = json_decode($this->request->getContent(), true)['user'];
-        /*if($userCredentials['token']){
-            $user = $this->jwtHelper->validateToken($userCredentials['token'])->data;
-            $this->response->setData([
-                'user' => $user,
-                'jwt' => $this->jwtHelper->generateToken($user)
-            ]);
-            return $this->response;
-        }*/
 
         $user = User::where('email', $userCredentials['email'])->first();
         if(password_verify($userCredentials['password'], $user->password))
@@ -59,6 +59,15 @@ class UserController
         } else {
             $this->response->setData('Password is incorrect');
         }
+
+        return $this->response;
+    }
+
+    public function getCurrentUser()
+    {
+        $this->response->setData([
+            'user' => $this->user
+        ]);
 
         return $this->response;
     }

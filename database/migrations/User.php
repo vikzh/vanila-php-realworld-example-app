@@ -11,5 +11,6 @@ Capsule::schema()->create('users', function ($table) {
     $table->string('password');
     $table->string('bio')->nullable();
     $table->string('image')->nullable();
+    $table->string('token')->nullable();
     $table->timestamps();
 });
