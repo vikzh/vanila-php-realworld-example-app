@@ -14,14 +14,12 @@ class UserController
     private $jwtHelper;
     private $user;
 
-    public function __construct(Request $request, Response $response, JwtHelper $jwtHelper)
+    public function __construct(Request $request, JwtHelper $jwtHelper)
     {
-        $this->request = $request;
-        $this->response = $response;
         $this->jwtHelper = $jwtHelper;
 
-        if($this->request->headers->has('Authorization')){
-            [$authorizationKey, $authorizationValue] = explode(' ', $this->request->headers->get('Authorization'));
+        if($request->headers->has('Authorization')){
+            [$authorizationKey, $authorizationValue] = explode(' ', $request->headers->get('Authorization'));
             if($authorizationKey === 'Token'){
                 $userData = $this->jwtHelper->validateToken($authorizationValue)->data;
                 $this->user = User::where('token', $userData->token)->first();
@@ -29,10 +27,10 @@ class UserController
         }
     }
 
-    public function store()
+    public function store(Request $request, Response $response)
     {
         $newUser = new User();
-        $newUserData = json_decode($this->request->getContent(), true)['user'];
+        $newUserData = json_decode($request->getContent(), true)['user'];
         $newUser->username = $newUserData['username'];
         $newUser->email = $newUserData['email'];
         $newUser->password = password_hash($newUserData['password'], PASSWORD_DEFAULT);
@@ -41,49 +39,49 @@ class UserController
         $newUser->token = $this->jwtHelper->generateToken($newUser);
         $newUser->save();
 
-        return $this->response->setData([
+        return $response->setData([
             'user' => $newUser,
         ]);
     }
 
-    public function login()
+    public function login(Request $request, Response $response)
     {
-        $userCredentials = json_decode($this->request->getContent(), true)['user'];
+        $userCredentials = json_decode($request->getContent(), true)['user'];
 
         $user = User::where('email', $userCredentials['email'])->first();
         if(password_verify($userCredentials['password'], $user->password))
         {
             $user->token = $this->jwtHelper->generateToken($user);
-            $this->response->setData([
+            $response->setData([
                 'user' => $user
             ]);
         } else {
-            $this->response->setData('Password is incorrect');
+            $response->setData('Password is incorrect');
         }
 
-        return $this->response;
+        return $response;
     }
 
-    public function getCurrentUser()
+    public function getCurrentUser(Response $response)
     {
-        $this->response->setData([
+        $response->setData([
             'user' => $this->user
         ]);
 
-        return $this->response;
+        return $response;
     }
 
-    public function update()
+    public function update(Request $request, Response $response)
     {
-        $dataToUpdate = json_decode($this->request->getContent(), true);
+        $dataToUpdate = json_decode($request->getContent(), true);
         $this->user->fill($dataToUpdate);
         $this->user->token = $this->jwtHelper->generateToken($this->user);
         $this->user->save();
 
-        $this->response->setData([
+        $response->setData([
             'user' => $this->user
         ]);
 
-        return $this->response;
+        return $response;
     }
 }
